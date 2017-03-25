@@ -1,5 +1,3 @@
+from subprocess import call
 
-from os import execv
-
-execv('launch.sh')
-
+call('./launch.sh')
