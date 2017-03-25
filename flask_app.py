@@ -12,7 +12,6 @@ track_ids = None
 
 @app.route("/login")
 def login():
-    import ipdb; ipdb.set_trace()
     scope = 'playlist-modify-public'
     token = util.prompt_for_user_token(username, scope)
 
