@@ -21,6 +21,7 @@ def login():
         single_track_artists = build_single_track_artist_dict(sp)
         populate_playlist(sp, single_track_artists)
         return 'All done! Look for a playlist called "Artist Expander". It will take a few minutes to appear.'
+        sys.exit()
     else:
         print "Can't get token for", Config.USER_ID
         return "Something went wrong and I don't feel like fixing it."
@@ -117,4 +118,5 @@ def populate_playlist(sp, single_track_artists):
     print 'Done!'
 
 if __name__ == "__main__":
+    Config.USER_ID = raw_input('Enter your Spotify User ID: ')
     app.run()
