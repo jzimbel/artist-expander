@@ -32,7 +32,7 @@ def maybe_create_playlist(sp):
             return
     # no existing playlist. Let's make a new one.
     print 'Creating a new "Artist Expander" playlist.'
-    result = sp.user_playlist_create(Config.USER_ID, 'Artist Expander', public=False)
+    result = sp.user_playlist_create(Config.USER_ID, 'Artist Expander', public=Config.PUBLIC)
     Config.PLAYLIST_ID = result['id']
 
 
@@ -40,16 +40,12 @@ def build_single_track_artist_dict(sp):
     '''
     Sometimes naming things is hard. This builds a dictionary of the form
     {artist_id: track_id} from artists for which the user has saved only 1 track.
-    Only looks at the first 10,000 tracks in the user's library.
-    If your library is bigger than that... it might be time to downsize.
     '''
-    print 'Finding artists with only one song saved...'
+    print 'Finding artists with only one track saved...'
     saved_track_dict = {}
-    # 50 * 200 = 10,000. Probably enough for most people
-    iterations = 200
 
     results = sp.current_user_saved_tracks(limit=50)
-    for i in range(iterations):
+    while True:
         tracks = results['items']
         for item in tracks:
             track = item['track']
@@ -68,24 +64,27 @@ def build_single_track_artist_dict(sp):
     # remove all artists for which more than one track is saved,
     # and unpack the track ids from lists (since there's only 1 id now)
     single_track_dict = {k: v[0] for k, v in saved_track_dict.iteritems() if len(v) == 1}
-    print 'Done.'
+    print 'Found', len(single_track_dict.keys()), 'one-track artists in your library!'
     return single_track_dict
 
 
 def populate_playlist(sp, single_track_artists):
     print 'Populating "Artist Expander" playlist...'
     playlist = []
-    for artist_id, track_id in single_track_artists.iteritems():
-        # endpoint returns top 10 tracks by default, ordered by popularity descending.
-        # throw away everything but the track ids.
-        # throw away track that's already saved if it's one of the top 10.
-        # just get the top 5 of the remaining tracks
-        top_tracks = [
-            track['id']
-            for track in sp.artist_top_tracks(artist_id)['tracks']
-            if track['id'] != track_id
-        ][0:5]
-        playlist.extend(top_tracks)
+    if Config.COLLATE:
+        playlist = collate_playlist(sp, single_track_artists)
+    else:
+        for artist_id, track_id in single_track_artists.iteritems():
+            # endpoint returns top 10 tracks by default, ordered by popularity descending.
+            # throw away everything but the track ids.
+            # throw away track that's already saved if it's one of the top 10.
+            # just get the top TRACKS_PER_ARTIST of the remaining tracks
+            top_tracks = [
+                track['id']
+                for track in sp.artist_top_tracks(artist_id)['tracks']
+                if track['id'] != track_id
+            ][0:Config.TRACKS_PER_ARTIST]
+            playlist.extend(top_tracks)
 
     # clear the existing playlist out (literally "replace all tracks with nothing")
     result = sp.user_playlist_replace_tracks(Config.USER_ID, Config.PLAYLIST_ID, [])
@@ -106,6 +105,28 @@ def populate_playlist(sp, single_track_artists):
     for chunk in final_playlist:
         result = sp.user_playlist_add_tracks(Config.USER_ID, Config.PLAYLIST_ID, chunk)
     print 'All done! Look for a playlist called "Artist Expander". It will take a few minutes to appear.'
+
+def collate_playlist(sp, single_track_artists):
+    top_tracks = []
+    for artist_id, track_id in single_track_artists.iteritems():
+        # endpoint returns top 10 tracks by default, ordered by popularity descending.
+        # throw away everything but the track ids.
+        # throw away track that's already saved if it's one of the top 10.
+        # just get the top TRACKS_PER_ARTIST of the remaining tracks
+        top_tracks.append([
+            track['id']
+            for track in sp.artist_top_tracks(artist_id)['tracks']
+            if track['id'] != track_id
+        ][0:Config.TRACKS_PER_ARTIST])
+
+    playlist = []
+    for i in range(Config.TRACKS_PER_ARTIST):
+        for track_list in top_tracks:
+            track_id = track_list[i] if len(track_list) > i else None
+            if track_id is not None:
+                playlist.append(track_id)
+    return playlist
+
 
 if __name__ == "__main__":
     Config.USER_ID = raw_input('Enter your Spotify User ID: ')
