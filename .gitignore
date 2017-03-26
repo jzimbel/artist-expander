@@ -91,3 +91,5 @@ ENV/
 # extra stuff!
 scratch
 secrets.sh
+.cache-*
+

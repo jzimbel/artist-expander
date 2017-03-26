@@ -36,8 +36,8 @@ class Config(object):
     # - ARTIST A TRACK 2
     # - ARTIST B TRACK 2
     # ...
-    COLLATE = True
+    COLLATE = False
 
     # PUBLIC #
     # Default False. Set True to make your generated playlist public.
-    PUBLIC = True
+    PUBLIC = False
