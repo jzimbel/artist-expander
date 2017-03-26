@@ -2,15 +2,11 @@ import pprint
 import sys
 import spotipy
 import spotipy.util as util
-from flask import Flask
 
 from config import Config
 
-app = Flask(__name__)
 
-
-@app.route("/login")
-def login():
+def main():
     token = util.prompt_for_user_token(Config.USER_ID, Config.SPOTIFY_ACCESS_SCOPE)
 
     if token:
@@ -20,16 +16,10 @@ def login():
         maybe_create_playlist(sp)
         single_track_artists = build_single_track_artist_dict(sp)
         populate_playlist(sp, single_track_artists)
-        return 'All done! Look for a playlist called "Artist Expander". It will take a few minutes to appear.'
-        sys.exit()
+        return 0
     else:
         print "Can't get token for", Config.USER_ID
-        return "Something went wrong and I don't feel like fixing it."
-
-
-@app.route("/auth_code")
-def auth_code():
-    return "Thanks Spotify"
+        return 1
 
 
 def maybe_create_playlist(sp):
@@ -115,8 +105,8 @@ def populate_playlist(sp, single_track_artists):
     # populate the playlist in 100-track chunks
     for chunk in final_playlist:
         result = sp.user_playlist_add_tracks(Config.USER_ID, Config.PLAYLIST_ID, chunk)
-    print 'Done!'
+    print 'All done! Look for a playlist called "Artist Expander". It will take a few minutes to appear.'
 
 if __name__ == "__main__":
     Config.USER_ID = raw_input('Enter your Spotify User ID: ')
-    app.run()
+    main()
