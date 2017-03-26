@@ -25,13 +25,13 @@ Virtualenvs will also help.
 5. Run the project. In the same terminal session where you did step 3, run:  
    ```$ ./local_launch.sh```  
    Enter the user ID you copied when prompted.
-6. Open your browser of choice and go to http://localhost:5000/login.
-7. Spotify will check if you're okay with giving the program some permissions for your account.
+6. A browser tab will open up and Spotify will check if you're okay with giving
+   the program some permissions for your account.
    If you are, click 'Okay'.
-8. You'll get redirected to Google, but if you look at your browser's URL bar,
+7. You'll get redirected to Google, but if you look at your browser's URL bar,
    you'll see a huge code after '.com'. Copy the WHOLE link, as in, 'select all'+'copy',
    and paste this into the same terminal session where you did step 5.
-9. You're done! Phew. The program will take 30 seconds to a minute to build your playlist.
+8. You're done! Phew. The program will take 30 seconds to a minute to build your playlist.
    Wait another 2 or so minutes after it's done for the playlist to show up in Spotify.
 
 ## Options
