@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export SPOTIFY_USER_ID='128300609'
+export SPOTIPY_REDIRECT_URI='http://requestb.in/1h4p2h41'
+export SPOTIPY_CLIENT_ID='76159224cd0e4725826934d253118290'
+export SPOTIPY_CLIENT_SECRET='fd3f120077a3491898bb444c5a23beef'
+
+python flask_app.py
