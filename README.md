@@ -24,7 +24,7 @@ Virtualenvs will also help.
    after the last `/`. If you signed up through Facebook, this is just a number.  
    ```https://open.spotify.com/user/128300609```  
    ```____________________this part ^^^^^^^^^```
-6. Run the project. In the same terminal session where you did step 3, run:  
+6. Run the project. In the same terminal session where you did step 4, run:  
    ```$ ./local_launch.sh```  
    Enter the user ID you copied when prompted.
 7. A browser tab will open up and Spotify will check if you're okay with giving
@@ -32,7 +32,7 @@ Virtualenvs will also help.
    If you are, click 'Okay'.
 8. You'll get redirected to Google, but if you look at your browser's URL bar,
    you'll see a huge code after '.com'. Copy the WHOLE link, as in, 'select all'+'copy',
-   and paste this into the same terminal session where you did step 5.
+   and paste this into the same terminal session where you did step 6.
 9. You're done! Phew. The program will take 30 seconds to a minute to build your playlist.
    Wait another 2 or so minutes after it's done for the playlist to show up in Spotify.
 
